@@ -1,14 +1,13 @@
-import os
-from dotenv import load_dotenv
-from scraper.scraper import Scraper
+from src.common.Driver import Driver
+from src.tutores.tutores import Tutores
+from src.estudiantes.estudiantes import Estudiantes
+from src.actividades.actividades import Actividades
 
 def main():
-    load_dotenv()
-    email = os.environ.get('EMAIL_USER')
-    password = os.environ.get('PASSWORD_USER')
-    scraper = Scraper(email, password)
-    scraper.login()
-    scraper.getEstudiantes('Ingenieria')
+    
+    driver = Driver().LoginApplication
+    estudiantes = Estudiantes(driver)
+    estudiantes.getAllEstudiantes()
 
 if __name__ == "__main__":
     main()

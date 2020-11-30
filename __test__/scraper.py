@@ -6,23 +6,6 @@ from selenium.webdriver.common.keys import Keys
 
 class ScraperGRACA(object):
 
-    def login(self):
-        self.driver = webdriver.Chrome(executable_path=r'E:\Santiago\Proyectos\Python\Drivers\chromedriver.exe')
-        self.driver.get("https://graca.site")
-        loginbutton = self.driver.find_element_by_xpath("/html/body/div/div/div/div[2]/div[2]/div/div/a[1]")
-        loginbutton.click()
-        self.driver.implicitly_wait(10)
-        emailinput = self.driver.find_element_by_xpath("//*[@id='identifierId']")
-        emailinput.send_keys("")
-        nextbutton = self.driver.find_element_by_xpath("/html/body/div[1]/div[1]/div[2]/div/div[2]/div/div/div[2]/div/div[2]/div/div[1]/div/div/button")
-        nextbutton.click()
-        self.driver.implicitly_wait(10)
-        passwordinput = self.driver.find_element_by_name("password")
-        passwordinput.send_keys("")
-        nextbutton = self.driver.find_element_by_xpath("/html/body/div[1]/div[1]/div[2]/div/div[2]/div/div/div[2]/div/div[2]/div/div[1]/div/div/button")
-        nextbutton.click()
-
-
     def saveDatosActividad(self, grupo, tipoactividad, actividadnumero, actividadobjetivo, sesionnumero, sesionfecha):
         
         informacion = self.driver.find_element_by_xpath('//*[@id="app-layout"]/div/div[1]/div[2]/div[2]/div[2]/div[1]').text
@@ -229,46 +212,6 @@ class ScraperGRACA(object):
             json.dump(self.data, jsonfile)
 
 
-    def getPersonas(self):
-        
-        currentpage = 1
-        untilpage = 135
-
-        self.personas = []
-
-        while self.driver.current_url != "https://graca.site/home#" :
-            pass
-
-        for i in range(currentpage, untilpage):
-
-            self.driver.get("https://graca.site/personas?page=" + str(i))
-            array = self.driver.find_elements_by_xpath("//*[@class='btn btn-success btn-xs row-button']")
-
-            for j in range(0, len(array)):
-
-                if array[j].text != "Activar":
-                    personaout = {}
-                    array[j].send_keys(Keys.CONTROL + Keys.ENTER)
-                    self.driver.switch_to.window(self.driver.window_handles[1])
-
-                    if self.driver.find_element_by_xpath("//*[@id='estudiante']").get_attribute("checked"):
-                        personaout = {
-                            "nombre": self.driver.find_element_by_xpath("//*[@id='app-layout']/div/div[1]/div[2]/div[2]/div[2]/form/div[1]/div[1]/div/input").get_attribute("value"),
-                            "codigo": self.driver.find_element_by_xpath("//*[@id='datosEstudiante']/div[2]/div[1]/div/input").get_attribute("value"),
-                            "programa": self.driver.find_element_by_xpath("//*[@id='datosEstudiante']/div[2]/div[2]/div/div/button").get_attribute("title"),
-                            "facultad": self.driver.find_element_by_xpath("//*[@id='datosEstudiante']/div[2]/div[3]/div/div/button").get_attribute("title"),
-                            "caracteristica": self.driver.find_element_by_xpath("//*[@id='datosEstudiante']/div[3]/div[1]/div/div/button").get_attribute("title")
-                        }
-                        
-                        self.personas.append(personaout)
-
-                    self.driver.close()
-                    self.driver.switch_to.window(self.driver.window_handles[0])
-            
-            self.driver.implicitly_wait(10)
-
-        self.driver.close()
-
 
     def escribiractividades(self):
         
@@ -340,9 +283,3 @@ class ScraperGRACA(object):
                         break
                 
             self.outWorkbook.close()
-
-
-scraper = ScraperGRACA()
-scraper.login()
-scraper.checkActividades()
-scraper.escribiractividades()
